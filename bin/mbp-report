@@ -1,0 +1,14 @@
+#!/bin/bash
+
+origin=$(basename "${BASH_SOURCE[0]}")
+
+if [[ -z "$@" ]]
+then
+  echo "USAGE: $origin report.md"
+else
+  pandoc --smart \
+         --standalone \
+         --template=/home/kirill/gitrepos/mbp-report/templates/mbp.html \
+         --output index.html \
+         report.md 
+fi
