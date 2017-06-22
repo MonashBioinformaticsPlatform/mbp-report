@@ -1,14 +1,62 @@
 #!/bin/bash
 
-origin=$(basename "${BASH_SOURCE[0]}")
+unset origin
+origin=$(basename $BASH_SOURCE)
 
-if [[ -z "$@" ]]
-then
-  echo "USAGE: $origin report.md"
-else
+usage() {
+  echo "Usage: $origin [OPTIONS] "
+  echo "Options: "
+  echo ""
+  echo "     templ (template): get a copy of report.md template, [PATH]"
+  echo "     report: make html report, <REPORT.MD> [INDEX.HTML]"
+  echo ""
+}
+
+mk_report() {
+  if [[ -z $@ ]]
+  then
+    echo "ERROR: not enough arguments"
+  fi
+  unset infile
+  unset outfile
+
+  infile=$1
+  outfile="index.html"
+  if [[ -n $2 ]]
+  then
+    outfile="$2"
+  fi
   pandoc --smart \
          --standalone \
          --template=/home/kirill/gitrepos/mbp-report/templates/mbp.html \
-         --output index.html \
-         report.md 
-fi
+         --output $outfile $infile
+  unset infile
+}
+
+md_templ() {
+ unset templ
+ templ="."
+ if [[ -n "$1" ]]
+ then 
+   templ=$1
+ fi
+ cp -v /home/kirill/gitrepos/mbp-report/templates/report.md $templ
+ unset templ
+}
+
+case "$1" in
+  help|-h|--help)
+    usage
+    exit
+    ;;
+  templ|template)
+    md_templ "$2"
+    exit
+    ;;
+  mkrep|make-report)
+    mk_report "$2" "$3"
+    ;;
+  *)
+    usage
+    exit
+esac
