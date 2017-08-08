@@ -8,7 +8,7 @@ usage() {
   echo "Options: "
   echo ""
   echo "     templ (template): get a copy of report.md template, [PATH]"
-  echo "     report: make html report, <REPORT.MD> [INDEX.HTML]"
+  echo "     mkrep (make-report): make html report, <REPORT.MD> [INDEX.HTML]"
   echo ""
 }
 
