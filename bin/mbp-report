@@ -48,6 +48,12 @@ mk_report() {
 md_templ() {
   unset templ
   templ="report.md"
+  if [[ -f $templ ]]
+  then
+    >&2 echo "ERROR: $templ file already exist"
+    exit 1
+  fi
+
   md_docs="/home/kirill/gitrepos/mbp-report/templates/base.md"
   case "$1" in
     rnaseq)
