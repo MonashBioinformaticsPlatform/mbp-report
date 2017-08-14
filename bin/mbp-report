@@ -7,8 +7,20 @@ usage() {
   echo "Usage: $origin [OPTIONS] "
   echo "Options: "
   echo ""
-  echo "     templ (template): get a copy of report.md template, [PATH]"
+  echo "     templ (template): get a copy of report.md template"
+  echo ""
+  echo "         R (rnaseq) insert general comment about RNAseq run"
+  echo "         C (chisep) insert general comment about ChipSeq run"
+  echo ""
   echo "     mkrep (make-report): make html report, <REPORT.MD> [INDEX.HTML]"
+  echo ""
+  echo "Examples:"
+  echo ""
+  echo "mbp-repot templ;                       # make generic report template"
+  echo "mbp-repot templ rnaseq;                # make RNAseq specific template"
+  echo ""
+  echo "mbp-repot mkrep report.md;             # make index.html file"
+  echo "mbp-repot mkrep report.md report.html; # make report.html file"
   echo ""
 }
 
@@ -34,13 +46,22 @@ mk_report() {
 }
 
 md_templ() {
- unset templ
- templ="."
- if [[ -n "$1" ]]
- then 
-   templ=$1
- fi
- cp -v /home/kirill/gitrepos/mbp-report/templates/report.md $templ
+  unset templ
+  templ="report.md"
+  md_docs="/home/kirill/gitrepos/mbp-report/templates/base.md"
+  case "$1" in
+    rnaseq)
+      md_docs="$(dirname $md_docs)/RNAsik.md $md_docs"
+      ;;
+    chipseq)
+      md_docs="$(dirname $md_docs)/chipSeq.md $md_docs"
+      ;;
+    "")
+      md_docs="$(dirname $md_docs)/general.md $md_docs"
+      ;;
+  esac
+
+ cat $md_docs > $templ
  unset templ
 }
 
@@ -50,7 +71,24 @@ case "$1" in
     exit
     ;;
   templ|template)
-    md_templ "$2"
+    case "$2" in
+      R|rnaseq)
+	md_templ rnaseq
+	exit
+	;;
+      C|chipseq)
+	md_templ chipseq
+	exit
+	;;
+      "")
+	md_templ
+	exit
+	;;
+      *)
+        >&2 echo "ERROR: invalid analysis flag -> $2"
+        exit 1
+        ;;
+      esac
     exit
     ;;
   mkrep|make-report)
