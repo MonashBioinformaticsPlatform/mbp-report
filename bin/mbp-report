@@ -11,6 +11,7 @@ usage() {
   echo ""
   echo "         R (rnaseq) insert general comment about RNAseq run"
   echo "         C (chisep) insert general comment about ChipSeq run"
+  echo "         Q (qiime) insert general comment about Qiime2 run"
   echo ""
   echo "     mkrep (make-report): make html report, <REPORT.MD> [INDEX.HTML]"
   echo ""
@@ -62,6 +63,9 @@ md_templ() {
     chipseq)
       md_docs="$(dirname $md_docs)/chipSeq.md $md_docs"
       ;;
+    qiime)
+      md_docs="$(dirname $md_docs)/qiime2.md"
+      ;;
     "")
       md_docs="$(dirname $md_docs)/general.md $md_docs"
       ;;
@@ -84,6 +88,10 @@ case "$1" in
 	;;
       C|chipseq)
 	md_templ chipseq
+	exit
+	;;
+      Q|qiime)
+	md_templ qiime
 	exit
 	;;
       "")
