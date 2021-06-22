@@ -39,7 +39,7 @@ mk_report() {
   then
     outfile="$2"
   fi
-  pandoc --smart \
+  pandoc \
          --standalone \
          --template=/home/kirill/gitrepos/mbp-report/templates/mbp.html \
          --output $outfile $infile
